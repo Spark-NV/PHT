@@ -3,10 +3,6 @@
 OpenPHT-Embedded is a 'Just enough OS' Linux distribution for running [OpenPHT](https://github.com/RasPlex/OpenPHT) on popular mediacentre hardware.
 
 **Notes**
-sudo apt-get install git
-sudo apt-get install gcc-aarch64-linux-gnu
-sudo apt-get install gcc-multilib
-sudo apt-get install g++-multilib
 
 * SSH login details are user: "root" password: "openpht" or "rasplex" depending on distribution.
 
@@ -23,6 +19,17 @@ sudo apt-get install g++-multilib
 * `DISTRO=OpenPHT PROJECT=Odroid_C2 ARCH=aarch64 make image`
 * `DISTRO=OpenPHT PROJECT=Intel_EGL ARCH=x86_64 make image`
 * Use `OPENPHT_REPO`, `OPENPHT_SETTINGS_REPO` and `OPENPHT_BRANCH` to change what repository and branch of OpenPHT(-settings) to build
+
+**deps**
+
+sudo apt-get install git
+
+sudo apt-get install gcc-aarch64-linux-gnu
+
+sudo apt-get install gcc-multilib
+
+sudo apt-get install g++-multilib
+
 
 # LibreELEC
 
