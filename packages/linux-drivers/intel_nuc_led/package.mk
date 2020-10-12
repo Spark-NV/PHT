@@ -1,7 +1,6 @@
 ################################################################################
 #      This file is part of LibreELEC - https://LibreELEC.tv
 #      Copyright (C) 2016 Team LibreELEC
-#      Copyright (C) 2016 kszaq
 #
 #  LibreELEC is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -17,38 +16,30 @@
 #  along with LibreELEC.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-PKG_NAME="mt7601u-aml"
-PKG_REV="1"
-PKG_ARCH="arm aarch64"
+PKG_NAME="intel_nuc_led"
+PKG_VERSION="fedb38e"
+PKG_ARCH="x86_64"
 PKG_LICENSE="GPL"
-PKG_SITE="https://sources.libreelec.tv/mirror/mt7601u-aml"
-PKG_VERSION="4e61a61"
-PKG_URL="https://github.com/tomatotech/mmallow_hardware_wifi_mtk_drivers_mt7601/archive/$PKG_VERSION.tar.gz"
-PKG_SOURCE_DIR="mmallow_hardware_wifi_mtk_drivers_mt7601-$PKG_VERSION*"
+PKG_SITE="https://github.com/milesp20/intel_nuc_led/"
+PKG_URL="https://github.com/milesp20/intel_nuc_led/archive/$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain linux"
 PKG_NEED_UNPACK="$LINUX_DEPENDS"
 PKG_SECTION="driver"
-PKG_SHORTDESC="mt7601u-aml"
-PKG_LONGDESC="mt7601u-aml"
+PKG_SHORTDESC="Intel NUC7i[x]BN and NUC6CAY LED Control for Linux"
+PKG_LONGDESC="Intel NUC7i[x]BN and NUC6CAY LED Control for Linux"
 
 PKG_IS_ADDON="no"
 PKG_AUTORECONF="no"
 
-if [ "$TARGET_KERNEL_ARCH" = "arm64" -a "$TARGET_ARCH" = "arm" ]; then
-  PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET gcc-linaro-aarch64-linux-gnu:host"
-  export PATH=$ROOT/$TOOLCHAIN/lib/gcc-linaro-aarch64-linux-gnu/bin/:$PATH
-  TARGET_PREFIX=aarch64-linux-gnu-
-fi
+pre_make_target() {
+  unset LDFLAGS
+}
 
 make_target() {
-  LDFLAGS="" make -C $(kernel_path) M=$ROOT/$PKG_BUILD ARCH=$TARGET_KERNEL_ARCH CROSS_COMPILE=$TARGET_PREFIX
+  make KDIR=$(kernel_path)
 }
 
 makeinstall_target() {
   mkdir -p $INSTALL/usr/lib/modules/$(get_module_dir)/$PKG_NAME
-  cp $ROOT/$PKG_BUILD/mtprealloc.ko $INSTALL/usr/lib/modules/$(get_module_dir)/$PKG_NAME
-  cp $ROOT/$PKG_BUILD/mt7601usta.ko $INSTALL/usr/lib/modules/$(get_module_dir)/$PKG_NAME
-
-  mkdir -p $INSTALL/usr/lib/firmware
-  cp $ROOT/$PKG_BUILD/RT2870STA_7601.dat $INSTALL/usr/lib/firmware
+    cp *.ko $INSTALL/usr/lib/modules/$(get_module_dir)/$PKG_NAME
 }

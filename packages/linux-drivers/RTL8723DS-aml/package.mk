@@ -1,7 +1,6 @@
 ################################################################################
 #      This file is part of LibreELEC - https://LibreELEC.tv
 #      Copyright (C) 2016 Team LibreELEC
-#      Copyright (C) 2016 kszaq
 #
 #  LibreELEC is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -17,19 +16,19 @@
 #  along with LibreELEC.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-PKG_NAME="mt7601u-aml"
+PKG_NAME="RTL8723DS-aml"
+PKG_VERSION="fb4adf7"
 PKG_REV="1"
 PKG_ARCH="arm aarch64"
 PKG_LICENSE="GPL"
-PKG_SITE="https://sources.libreelec.tv/mirror/mt7601u-aml"
-PKG_VERSION="4e61a61"
-PKG_URL="https://github.com/tomatotech/mmallow_hardware_wifi_mtk_drivers_mt7601/archive/$PKG_VERSION.tar.gz"
-PKG_SOURCE_DIR="mmallow_hardware_wifi_mtk_drivers_mt7601-$PKG_VERSION*"
+# amlogic: PKG_SITE="http://openlinux.amlogic.com:8000/download/ARM/wifi/"
+PKG_SITE="https://github.com/khadas/android_hardware_wifi_realtek_drivers_8723ds"
+PKG_URL="$PKG_SITE/archive/$PKG_VERSION.tar.gz"
+PKG_SOURCE_DIR="android_hardware_wifi_realtek_drivers_8723ds-$PKG_VERSION*"
 PKG_DEPENDS_TARGET="toolchain linux"
 PKG_NEED_UNPACK="$LINUX_DEPENDS"
+PKG_PRIORITY="optional"
 PKG_SECTION="driver"
-PKG_SHORTDESC="mt7601u-aml"
-PKG_LONGDESC="mt7601u-aml"
 
 PKG_IS_ADDON="no"
 PKG_AUTORECONF="no"
@@ -40,15 +39,21 @@ if [ "$TARGET_KERNEL_ARCH" = "arm64" -a "$TARGET_ARCH" = "arm" ]; then
   TARGET_PREFIX=aarch64-linux-gnu-
 fi
 
+post_unpack() {
+  sed -i 's/-DCONFIG_CONCURRENT_MODE//g; s/^CONFIG_POWER_SAVING.*$/CONFIG_POWER_SAVING = n/g; s/^CONFIG_RTW_DEBUG.*/CONFIG_RTW_DEBUG = n/g' $ROOT/$PKG_BUILD/*/Makefile
+  sed -i 's/^#define CONFIG_DEBUG.*//g' $ROOT/$PKG_BUILD/*/include/autoconf.h
+  sed -i 's/#define DEFAULT_RANDOM_MACADDR.*1/#define DEFAULT_RANDOM_MACADDR 0/g' $ROOT/$PKG_BUILD/*/core/rtw_ieee80211.c
+}
+
 make_target() {
-  LDFLAGS="" make -C $(kernel_path) M=$ROOT/$PKG_BUILD ARCH=$TARGET_KERNEL_ARCH CROSS_COMPILE=$TARGET_PREFIX
+  LDFLAGS="" make -C $(kernel_path) M=$ROOT/$PKG_BUILD/rtl8723DS \
+       ARCH=$TARGET_KERNEL_ARCH \
+       KSRC=$(kernel_path) \
+       CROSS_COMPILE=$TARGET_PREFIX \
+       USER_EXTRA_CFLAGS="-fgnu89-inline"
 }
 
 makeinstall_target() {
   mkdir -p $INSTALL/usr/lib/modules/$(get_module_dir)/$PKG_NAME
-  cp $ROOT/$PKG_BUILD/mtprealloc.ko $INSTALL/usr/lib/modules/$(get_module_dir)/$PKG_NAME
-  cp $ROOT/$PKG_BUILD/mt7601usta.ko $INSTALL/usr/lib/modules/$(get_module_dir)/$PKG_NAME
-
-  mkdir -p $INSTALL/usr/lib/firmware
-  cp $ROOT/$PKG_BUILD/RT2870STA_7601.dat $INSTALL/usr/lib/firmware
+    cp $ROOT/$PKG_BUILD/rtl8723DS/*.ko $INSTALL/usr/lib/modules/$(get_module_dir)/$PKG_NAME
 }

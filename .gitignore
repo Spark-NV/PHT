@@ -13,6 +13,9 @@
 /tools/mkpkg/*
 !/tools/mkpkg/mkpkg_*
 
+# dtb files
+/tools/place-dtb-here/*
+
 # mkpkg temp
 mkpkg-temp
 

@@ -275,7 +275,7 @@ if [ "$BUILD_ANDROID_BOOTIMG" = "yes" ]; then
   mkbootimg --kernel arch/$TARGET_KERNEL_ARCH/boot/$KERNEL_TARGET --ramdisk $ROOT/$BUILD/image/initramfs.cpio \
       $ANDROID_BOOTIMG_SECOND $ANDROID_BOOTIMG_OPTIONS --output arch/$TARGET_KERNEL_ARCH/boot/boot.img
   if [ -f $DTB_BLOB_OUTPUT ]; then
-    cp -f $DTB_BLOB_OUTPUT $TARGET_IMG/$IMAGE_NAME.dtb
+    cp -f $ROOT/tools/place-dtb-here/*.dtb $TARGET_IMG/$IMAGE_NAME.dtb
   fi
   echo "...done"
   popd > /dev/null

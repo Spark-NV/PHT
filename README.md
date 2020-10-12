@@ -20,15 +20,18 @@ OpenPHT-Embedded is a 'Just enough OS' Linux distribution for running [OpenPHT](
 * `DISTRO=OpenPHT PROJECT=Intel_EGL ARCH=x86_64 make image`
 * Use `OPENPHT_REPO`, `OPENPHT_SETTINGS_REPO` and `OPENPHT_BRANCH` to change what repository and branch of OpenPHT(-settings) to build
 
-**deps**
 
-sudo apt-get install git
+**In order to build aml builds you must place your device dtb in the directory "/tools/place-dtb-here/"**
 
-sudo apt-get install gcc-aarch64-linux-gnu
 
-sudo apt-get install gcc-multilib
+To find your required dtb reference here:
 
-sudo apt-get install g++-multilib
+https://coreelec.org/dtb/
+
+
+Download the dtb here:
+
+https://github.com/Spark-NV/DTB
 
 
 # LibreELEC
